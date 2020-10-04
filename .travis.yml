@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t snirshechter/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true USERNAME/react-test npm test
+
+after_success:
+  - docker build -t snirshechter/devops-multi-container-playground-client ./client
+  - docker build -t snirshechter/devops-multi-container-playground-nginx ./nginx
+  - docker build -t snirshechter/devops-multi-container-playground-server ./server
+  - docker build -t snirshechter/devops-multi-container-playground-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push snirshechter/devops-multi-container-playground-client
+  - docker push snirshechter/devops-multi-container-playground-nginx
+  - docker push snirshechter/devops-multi-container-playground-server
+  - docker push snirshechter/devops-multi-container-playground-worker

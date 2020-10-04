@@ -18,3 +18,16 @@ after_success:
   - docker push snirshechter/devops-multi-container-playground-nginx
   - docker push snirshechter/devops-multi-container-playground-server
   - docker push snirshechter/devops-multi-container-playground-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: devops-multi-docker-playground
+  env: DevopsMultiDockerPlayground-env
+  bucket_name: elasticbeanstalk-us-east-2-104671277612
+  bucket_path: devops-multi-docker-playground
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  on:
+    branch: master
+  
